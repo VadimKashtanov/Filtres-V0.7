@@ -8,24 +8,32 @@ uint n[]    = {	       8,     2,     2,     2};
 */
 //
 uint C      = 3;
-uint type[] = {FLTR_PRIX, COND4, COND4};
+uint type[] = {FLTR_PRIX, COND5, COND5};
 //
 uint y[]    = {        4,     2,     1};
-uint n[]    = {	       6,     2,     2};
+uint n[]    = {	      10,     2,     2};
 //
 Env_t env = {
 	//  Le gagant ne muteras jamais
-	.MUTP_cst           =0.30,  .COEF_G_cst           =0.60,
+	.MUTP_cst           =1.00,  .COEF_G_cst           =0.70,
 	.MUTP_p             =0.40,	.COEF_G_p             =0.80,
 	//
 	.MUTP_ema_int       =0.30,  .COEF_G_ema_int       =0.70,
 
 	//  Longeure
-	.l=3
+	.l=2
 };
 
+/*		Le vrai score, qui prend du temps a etre calcule 	*/
 void score(Mdl_t * mdl) {
-//	printf("score : %f %f %f %f\n", gain(mdl, env.l), prediction(mdl, env.l), investissement(mdl, env.l), gain_168H(mdl, env.l));
+	printf("Score   :   gain=%f   pred=%f   invest=%f   place=%f   gain_168H=%f   place_168H=%f\n",
+		          gain(mdl, env),
+		    prediction(mdl, env),
+		investissement(mdl, env),
+			 placement(mdl, env),
+			 gain_168H(mdl, env),
+	   placements_168H(mdl, env)
+	);
 };
 
 __attribute__ ((optimize(0)))
@@ -43,6 +51,12 @@ int main_petits_tests() {
 	
 	//recherche avec les poids (sans ema, voire comment faire mieux pour les poids)
 
+	srand(0);
+	charger_les_prixs();
+
+	Mdl_t * mdl = cree_mdl(C, y, n, type);
+	//plume_mdl(mdl);
+	score(mdl);
 
 /*	srand(0);
 	charger_les_prixs();
@@ -65,6 +79,6 @@ int main_petits_tests() {
 };
 
 int main() {
-	main_qlq_tests();
-	//main_petits_tests();
+	//main_qlq_tests();
+	main_petits_tests();
 }

@@ -54,9 +54,12 @@ void fltr_prix_plume_constes(Mdl_t * mdl) {
 				mdl->conste_depart[i] + j*constantes + k,
 				mdl->conste[mdl->conste_depart[i] + j*constantes + k]);
 				//
-				FOR(0, l, 1+(uint)roundf(mdl->conste[mdl->conste_depart[i] + j*constantes + k]*10)) {
-					ptr("\033[105m_\033[0m");
-				};
+				FOR(0, l, 1+(uint)roundf(mdl->conste[mdl->conste_depart[i] + j*constantes + k]*20)) {
+					ptr("\033[105m#\033[0m");
+				}
+				FOR(1+(uint)roundf(mdl->conste[mdl->conste_depart[i] + j*constantes + k]*20), l, 21) {
+					ptr("\033[47m_\033[0m");	
+				}
 				ptr("\n");
 			}
 		}

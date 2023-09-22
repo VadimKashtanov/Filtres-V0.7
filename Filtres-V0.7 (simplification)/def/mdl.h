@@ -12,15 +12,18 @@
 #define COND2 		1	//--,-+,+-,++
 #define COND4 		2	//00,01,02,03, 10,11,12,13, 20,21,22,23, 30,31,32,33,
 #define MOY   		3	//(a+b+...)/n
+#define COND5		4 	//[(-1,-0.6);(-0.6,-0.2);(-0.2,+0.2);(+0.2,+0.6);(+0.6,+1.0)]
+	//	Poids :				  -1         -0.5        0.0         +0.5         +1
 
-#define poids_COND2(n) 4  //(1 << n)		//2**n    2 etats
-#define poids_COND4(n) 16 //(1 << (2*n))	//4**n    4 etats
+#define poids_COND2(n) 4  //(1 << n)		//2**n    2 etats       [n=2]
+#define poids_COND4(n) 16 //(1 << (2*n))	//4**n    4 etats       [n=2]
 #define poids_MOY(n)   0  //0
+#define poids_COND5(n) 25 //(1 << (2*n))	//5**n    5 etats 		[n=2]
 
 #define constes_FLTR(n) (n)
 
 //
-#define POIDS_max   (Y_max*MAX3(poids_COND2(N_max), poids_COND4(N_max), poids_MOY(N_max)))
+#define POIDS_max   (Y_max*MAX4(poids_COND2(N_max), poids_COND4(N_max), poids_MOY(N_max), poids_COND5(N_max)))
 #define CONSTES_max (constes_FLTR(FLTR_max)*Y_max)
 
 typedef struct {
@@ -42,7 +45,7 @@ typedef float (*f_t)(float * x, float * poid, uint n);
 typedef void  (*plume_poids_t)(Mdl_t * mdl, uint c);
 typedef void  (*plume_config_t)(Mdl_t * mdl, uint c);
 
-#define INSTS 4
+#define INSTS 5
 extern f_t inst[INSTS];
 extern plume_poids_t inst_plume_poids[INSTS];
 extern plume_config_t inst_plume_config[INSTS];
@@ -53,17 +56,21 @@ void fltr_prix_plume_constes(Mdl_t * mdl);
 void fltr_prix_plume_config(Mdl_t * mdl, uint c);
 
 //	Instructions Normales
-float COND2_f(float * x, float * conste, uint n);
+float COND2_f(float * x, float * poid, uint n);
 void COND2_plume_poids(Mdl_t * mdl, uint c);
 void COND2_plume_config(Mdl_t * mdl, uint c);
 //
-float COND4_f(float * x, float * conste, uint n);
+float COND4_f(float * x, float * poid, uint n);
 void COND4_plume_poids(Mdl_t * mdl, uint c);
 void COND4_plume_config(Mdl_t * mdl, uint c);
 //
-float MOY_f(float * x, float * conste, uint n);
+float MOY_f(float * x, float * poid, uint n);
 void MOY_plume_poids(Mdl_t * mdl, uint c);
 void MOY_plume_config(Mdl_t * mdl, uint c);
+//
+float COND5_f(float * x, float * poid, uint n);
+void COND5_plume_poids(Mdl_t * mdl, uint c);
+void COND5_plume_config(Mdl_t * mdl, uint c);
 
 
 //	Allocation Memoire

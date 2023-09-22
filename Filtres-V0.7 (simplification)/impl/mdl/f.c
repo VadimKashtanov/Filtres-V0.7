@@ -22,7 +22,7 @@ float f(Mdl_t * mdl, uint depart) {
 			_x[j] = ema[_ema][depart - j*interv];
 
 		mdl->var[i] = fltr_prix_f(_x, mdl->conste + i*constes_FLTR(n[0]), n[0]);
-		printf("%i| %f\n", i, mdl->var[i]);
+		//printf("%i| %f\n", i, mdl->var[i]);
 	};
 
 	//  Autres insts principales
@@ -38,6 +38,7 @@ float f(Mdl_t * mdl, uint depart) {
 			if (mdl->type[i] == COND2) depart_poid = mdl->poid + mdl->poid_depart[i] + j*poids_COND2(mdl->n[i]);
 			if (mdl->type[i] == COND4) depart_poid = mdl->poid + mdl->poid_depart[i] + j*poids_COND4(mdl->n[i]);
 			if (mdl->type[i] == MOY  ) depart_poid = NULL;
+			if (mdl->type[i] == COND5) depart_poid = mdl->poid + mdl->poid_depart[i] + j*poids_COND5(mdl->n[i]);
 			//
 			mdl->var[mdl->y_depart[i] + j] = inst[mdl->type[i]](
 				//_x,
@@ -45,7 +46,7 @@ float f(Mdl_t * mdl, uint depart) {
 				depart_poid,
 				mdl->n[i]
 			);
-			printf("%i| %f\n", mdl->y_depart[i] + j, mdl->var[mdl->y_depart[i] + j]);
+			//printf("%i| %f\n", mdl->y_depart[i] + j, mdl->var[mdl->y_depart[i] + j]);
 		}
 	}
 	//

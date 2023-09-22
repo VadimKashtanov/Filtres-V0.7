@@ -33,6 +33,17 @@ Mdl_t * cree_mdl(uint C, uint * y, uint * n, uint * type) {
 			mdl->conste[i*constes_FLTR(n[0]) + k] = s/2 + d;
 		}
 	}
+	//	Adoucire les courbes initiales
+	float avant, apres;
+	float r[n[0]];
+	FOR(0, i, y[0]) {
+		FOR(0, k, constes_FLTR(n[0])) {
+			avant = (k > 0 ? mdl->conste[i*constes_FLTR(n[0]) + k-1] : mdl->conste[i*constes_FLTR(n[0]) + 0]);
+			apres = (k < (n[0]-1) ? mdl->conste[i*constes_FLTR(n[0]) + k+1] : mdl->conste[(i+1)*constes_FLTR(n[0])-1]);
+			r[k] = (avant + 4*mdl->conste[i*constes_FLTR(n[0]) + k] + apres) / 6; 
+		}
+		FOR(0, k, constes_FLTR(n[0])) mdl->conste[i*constes_FLTR(n[0]) + k] = r[k];
+	}
 
 	//  Ema & Intervalles	
 	for (uint i=0; i < y[0]; i++) mdl->ema[i] = 0;//rand() % NB_DIFF_EMA;
@@ -74,6 +85,17 @@ Mdl_t * cree_mdl(uint C, uint * y, uint * n, uint * type) {
 			mdl->poids += y[i] * poids_MOY(n[i]);
 			mdl->constes += 0;
 			FOR(0, k, y[i] * poids_MOY(n[i]))
+				mdl->poid[mdl->poid_depart[i] + k] = poid_cond_rnd();
+		} else if (type[i] == COND5) {
+			assert(n[i] == 2);//N_max);
+			assert(y[i] == y[i-1]/2);
+			//
+			mdl->poid_depart[i] = mdl->poids;
+			mdl->conste_depart[i] = mdl->constes;
+			//
+			mdl->poids += y[i] * poids_COND5(n[i]);
+			mdl->constes += 0;
+			FOR(0, k, y[i] * poids_COND5(n[i]))
 				mdl->poid[mdl->poid_depart[i] + k] = poid_cond_rnd();
 		} else {
 			ERR("La couche %i n'existe pas", type[i]);        
